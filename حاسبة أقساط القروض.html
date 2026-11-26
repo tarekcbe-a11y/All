@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>حاسبة أقساط القروض</title>
+<style>
+:root{--gold:#e6c673;--gold2:#a98b4a;--line:#5a4a26;--text:#f3efe6;--muted:#c4bba7;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:var(--text);font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.6}
+.app{max-width:480px;margin:14px auto;padding:20px 16px;border:1.5px solid var(--gold2);border-radius:26px;background:linear-gradient(160deg,#1a1a1a,#050505)}
+h1{color:var(--gold);text-align:center;font-size:1.45rem;margin:4px 0 14px;padding-bottom:14px;border-bottom:1px solid var(--gold2)}
+.tabs{display:flex;gap:10px;margin-bottom:12px}
+.tab{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:#111;color:var(--muted);font:inherit;cursor:pointer}
+.tab{font-size:.88rem;padding:12px 4px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row2 input,.row2 select{min-width:0}
+.big em{white-space:pre-line}
+.tab.on{border-color:var(--gold);color:var(--gold);background:linear-gradient(#2a2410,#0d0d0d)}
+input,select{width:100%;padding:12px 16px;margin-bottom:8px;border-radius:14px;border:1px solid #3a3a3a;background:#0b0b0b;color:var(--text);font:inherit;font-size:1.05rem}
+input::placeholder{color:#8a826f;font-size:.92rem}
+select:invalid{color:#8a826f;font-size:.92rem}
+.btn{width:100%;padding:14px;border-radius:14px;font:inherit;font-weight:700;cursor:pointer}
+.go{border:1px solid var(--gold);background:linear-gradient(#e9cb7a,#a97f2d);color:#1a1405;font-size:1.05rem;margin:4px 0 14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.c{border:1px solid #333;border-radius:14px;padding:12px;text-align:center;background:#0b0b0b}
+.c small{display:block;color:var(--muted);font-size:.82rem}
+.c b{color:var(--gold);font-size:1.25rem;font-weight:500;font-variant-numeric:tabular-nums}
+.big{border:1px solid var(--gold2);border-radius:14px;padding:14px;text-align:center;background:#120e04}
+.big small{color:var(--muted)}
+.big b{display:block;font-size:2rem;font-weight:500;font-variant-numeric:tabular-nums}
+.big em{font-style:normal;color:var(--gold);font-size:1rem}
+.err{color:#f2a0a0;text-align:center;min-height:2.2em;font-size:.9rem;margin-bottom:6px}
+.acts{display:flex;gap:8px;margin:10px 0}
+.acts .btn{padding:12px 6px;font-size:.92rem;font-weight:500;background:#0b0b0b}
+.new{border:1px solid #b4363a;color:#f4a3a5}
+.sv{border:1px solid var(--gold2);color:var(--gold)}
+.wrap{max-height:62vh;overflow:auto;border:1px solid #333;border-radius:12px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:.85rem;font-variant-numeric:tabular-nums}
+th,td{padding:8px 6px;text-align:center;border-bottom:1px solid #222;white-space:nowrap}
+th{position:sticky;top:0;background:#1c1608;color:var(--gold);font-weight:600}
+.foot{text-align:center;font-size:.8rem;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>حاسبة أقساط القروض</h1>
+<div id="main">
+  <div class="tabs">
+    <button class="tab on" id="tm" type="button">فائدة متناقصة</button>
+    <button class="tab" id="tf" type="button">فائدة ثابتة</button>
+    <button class="tab" id="ts" type="button">ضمان مرتب/معاش</button>
+  </div>
+  <select id="type" aria-label="نوع القرض">
+    <option value="قرض شخصي" selected>قرض شخصي</option>
+    <option value="قرض سيارة">قرض سيارة</option>
+    <option value="قرض عقاري">قرض عقاري</option>
+  </select>
+  <input id="amt" type="text" inputmode="decimal" autocomplete="off" placeholder="مبلغ القرض" aria-label="مبلغ القرض">
+  <div id="sbox" style="display:none">
+    <div class="row2">
+      <input id="inc" type="text" inputmode="decimal" autocomplete="off" placeholder="صافي الدخل الشهري" aria-label="صافي الدخل">
+      <input id="obl" type="text" inputmode="decimal" autocomplete="off" placeholder="الالتزامات القائمة" aria-label="الالتزامات">
+    </div>
+    <div class="row2">
+      <input id="dbr" type="number" inputmode="decimal" step="0.1" min="0" placeholder="نسبة الاستقطاع %" aria-label="نسبة الاستقطاع">
+      <select id="sm" aria-label="طريقة الفائدة"><option value="d" selected>فائدة متناقصة</option><option value="f">فائدة ثابتة</option></select>
+    </div>
+  </div>
+  <div class="row2">
+    <input id="rate" type="number" inputmode="decimal" step="0.01" min="0" placeholder="سعر الفائدة % سنوياً" aria-label="سعر الفائدة">
+    <select id="months" required aria-label="المدة"><option value="" selected disabled>المدة (بالشهور)</option></select>
+  </div>
+  <div class="row2">
+    <input id="fee" type="number" inputmode="decimal" step="0.01" min="0" placeholder="مصاريف إدارية % (اختياري)" aria-label="المصاريف الإدارية">
+    <input id="ins" type="number" inputmode="decimal" step="0.01" min="0" placeholder="التأمين (اختياري)" aria-label="التأمين">
+  </div>
+  <select id="it" aria-label="نوع التأمين"><option value="p" selected>التأمين: نسبة سنوية % من مبلغ القرض</option><option value="m">التأمين: مبلغ ثابت شهرياً</option></select>
+  <button class="btn go" id="go" type="button">حساب القرض</button>
+
+  <div class="grid">
+    <div class="c"><small>إجمالي الفوائد</small><b id="r1">—</b></div>
+    <div class="c"><small>إجمالي المسدد</small><b id="r2">—</b></div>
+    <div class="c"><small>المصاريف الإدارية</small><b id="r3">—</b></div>
+    <div class="c"><small>إجمالي التأمين</small><b id="r4">—</b></div>
+  </div>
+  <div class="big"><small id="r0">القسط الشهري</small><b id="r5">—</b><em id="r6">المعدل السنوي الفعلي: —</em></div>
+  <div class="err" id="err"></div>
+  <div class="acts">
+    <button class="btn new" id="nw" type="button">إدخال جديد</button>
+    <button class="btn sv" id="sc" type="button">جدول السداد</button>
+  </div>
+</div>
+
+<div id="pg" style="display:none">
+  <h2 style="color:var(--gold);text-align:center;font-size:1.15rem;margin:0 0 12px">جدول السداد</h2>
+  <div class="wrap"><table><thead><tr><th>القسط</th><th>المبلغ</th><th>الفائدة</th><th>الأصل</th><th>التأمين</th><th>الرصيد</th></tr></thead><tbody id="tb"></tbody></table></div>
+  <button class="btn go" id="bk" type="button">رجوع للحاسبة</button>
+</div>
+<p class="foot">أ/ طارق متولي</p>
+</div>
+
+<script>
+var mode = "d", sched = null;
+function $(i){return document.getElementById(i);}
+function num(i){return parseFloat($(i).value.replace(/,/g, ""));}
+function fmt(n){return n.toLocaleString("en-US",{maximumFractionDigits:2});}
+function pmt(P, i, n){return i === 0 ? P / n : P * i / (1 - Math.pow(1 + i, -n));}
+
+function clearRes(){
+  sched = null;
+  ["r1","r2","r3","r4","r5"].forEach(function(i){ $(i).textContent = "—"; });
+  $("r0").textContent = "القسط الشهري";
+  $("r6").textContent = "المعدل السنوي الفعلي: —";
+  $("err").textContent = "";
+}
+function showErr(t){ clearRes(); $("err").textContent = t; }
+function setMode(m){
+  mode = m;
+  $("tm").classList.toggle("on", m === "d");
+  $("tf").classList.toggle("on", m === "f");
+  $("ts").classList.toggle("on", m === "s");
+  $("amt").style.display = m === "s" ? "none" : "block";
+  $("sbox").style.display = m === "s" ? "block" : "none";
+  clearRes();
+}
+
+function calc(){
+  var r = num("rate") / 100, n = parseInt($("months").value, 10);
+  var fee = $("fee").value === "" ? 0 : num("fee") / 100;
+  var insv = $("ins").value === "" ? 0 : parseFloat($("ins").value);
+  var meth = mode === "s" ? $("sm").value : mode;
+  if (!(r >= 0) || !(n > 0) || !(fee >= 0) || !(insv >= 0)) { showErr("أكمل البيانات المطلوبة بأرقام صحيحة."); return; }
+  var P, a = meth === "d" ? pmt(1, r / 12, n) : (1 + r * n / 12) / n;
+  var c = $("it").value === "p" ? insv / 100 / 12 : 0, fixed = $("it").value === "m" ? insv : 0;
+  if (mode === "s") {
+    var inc = num("inc"), obl = $("obl").value === "" ? 0 : num("obl"), dbr = num("dbr") / 100;
+    if (!(inc > 0) || !(obl >= 0) || !(dbr > 0)) { showErr("أكمل الدخل والالتزامات ونسبة الاستقطاع."); return; }
+    var maxInst = inc * dbr - obl;
+    if (!(maxInst - fixed > 0)) { showErr("القسط المسموح لا يغطي الالتزامات والتأمين."); return; }
+    P = (maxInst - fixed) / (a + c);
+  } else {
+    P = num("amt");
+    if (!(P > 0)) { showErr("أكمل البيانات المطلوبة بأرقام صحيحة."); return; }
+  }
+  var inst = P * a, interest = inst * n - P, insM = P * c + fixed;
+  var feeAmt = P * fee, total = (inst + insM) * n + feeAmt, net = P - feeAmt;
+  var lo = 0, hi = 1, i, k;
+  if ((inst + insM) * n <= net) { lo = 0; hi = 0; }
+  else { for (k = 0; k < 100; k++) { i = (lo + hi) / 2; if (pmt(net, i, n) < inst + insM) lo = i; else hi = i; } }
+  var eff = (lo + hi) / 2 * 12 * 100;
+
+  sched = []; var bal = P, mi, mp;
+  for (k = 1; k <= n; k++) {
+    if (meth === "d") { mi = bal * r / 12; mp = inst - mi; } else { mi = interest / n; mp = P / n; }
+    bal = k === n ? 0 : Math.max(bal - mp, 0);
+    sched.push([k, inst + insM, mi, mp, insM, bal]);
+  }
+  $("err").textContent = "";
+  $("r1").textContent = fmt(interest); $("r2").textContent = fmt(total);
+  $("r3").textContent = fmt(feeAmt); $("r4").textContent = fmt(insM * n);
+  var effTxt = (meth === "d" ? "المعدل السنوي الفعلي: " : "المعدل المكافئ بالمتناقصة: ") + fmt(eff) + "%";
+  if (mode === "s") {
+    $("r0").textContent = $("type").value + " | أقصى مبلغ قرض";
+    $("r5").textContent = fmt(P);
+    $("r6").textContent = "القسط الشهري شامل التأمين: " + fmt(inst + insM) + "\n" + effTxt;
+  } else {
+    $("r0").textContent = $("type").value + " | القسط الشهري";
+    $("r5").textContent = fmt(inst + insM);
+    $("r6").textContent = effTxt;
+  }
+}
+
+function showSched(){
+  var tb = $("tb"); tb.textContent = "";
+  if (!sched) { showErr("احسب القرض الأول عشان يظهر جدول السداد."); return; }
+  sched.forEach(function(row){
+    var tr = document.createElement("tr");
+    row.forEach(function(v, j){ var td = document.createElement("td"); td.textContent = j === 0 ? v : fmt(v); tr.appendChild(td); });
+    tb.appendChild(tr);
+  });
+  $("main").style.display = "none"; $("pg").style.display = "block"; window.scrollTo(0, 0);
+}
+function back(){ $("pg").style.display = "none"; $("main").style.display = "block"; }
+function resetAll(){ ["amt","rate","fee","inc","obl","dbr","ins"].forEach(function(i){ $(i).value = ""; }); $("months").value = ""; clearRes(); }
+
+(function(){
+  var s = $("months"), m, t;
+  for (m = 1; m <= 360; m++) { t = m + " شهر" + (m % 12 === 0 ? " (" + m / 12 + (m / 12 <= 10 ? " سنوات" : " سنة") + ")" : ""); s.add(new Option(t, m)); }
+})();
+["amt","inc","obl"].forEach(function(id){ $(id).addEventListener("input", function(){
+  var v = this.value.replace(/[٠-٩]/g, function(d){ return d.charCodeAt(0) - 1632; }).replace(/[^\d.]/g, "");
+  var p = v.split(".");
+  p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  this.value = p.length > 1 ? p[0] + "." + p[1].slice(0, 2) : p[0];
+}); });
+$("tm").addEventListener("click", function(){ setMode("d"); });
+$("tf").addEventListener("click", function(){ setMode("f"); });
+$("ts").addEventListener("click", function(){ setMode("s"); });
+$("go").addEventListener("click", calc);
+$("nw").addEventListener("click", resetAll);
+$("sc").addEventListener("click", showSched);
+$("bk").addEventListener("click", back);
+</script>
+</body>
+</html>
