@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>حاسبة أقساط القروض</title>
+<style>
+:root{--gold:#e6c673;--gold2:#a98b4a;--line:#5a4a26;--text:#f3efe6;--muted:#c4bba7;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;padding:env(safe-area-inset-top,0px) 6px env(safe-area-inset-bottom,0px);background:#000;color:var(--text);font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.38}
+.app{max-width:480px;margin:6px auto;padding:11px 12px;border:1.5px solid var(--gold2);border-radius:20px;background:linear-gradient(160deg,#1a1a1a,#050505)}
+h1{color:var(--gold);text-align:center;font-size:1.22rem;margin:0 0 8px;padding-bottom:7px;border-bottom:1px solid var(--gold2)}
+h2{color:var(--gold);text-align:center;font-size:1.08rem;margin:0 0 8px}
+.tabs{display:flex;gap:6px;margin-bottom:7px}
+.tab{flex:1;padding:7px 5px;border-radius:10px;border:1px solid var(--line);background:#111;color:var(--muted);font:inherit;font-size:.83rem;cursor:pointer}
+.tab.on{border-color:var(--gold);color:var(--gold);background:linear-gradient(#2a2410,#0d0d0d)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.row2 input,.row2 select{min-width:0}
+.big em{white-space:pre-line}
+input,select{width:100%;padding:8px 10px;margin-bottom:6px;border-radius:11px;border:1px solid #3a3a3a;background:#0b0b0b;color:var(--text);font:inherit;font-size:.92rem}
+input::placeholder{color:#8a826f;font-size:.82rem}
+select:invalid{color:#8a826f;font-size:.82rem}
+.btn{width:100%;padding:9px;border-radius:11px;font:inherit;font-weight:700;cursor:pointer}
+.go{border:1px solid var(--gold);background:linear-gradient(#e9cb7a,#a97f2d);color:#1a1405;font-size:.95rem;margin:2px 0 7px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.c{border:1px solid #333;border-radius:11px;padding:7px 6px;text-align:center;background:#0b0b0b}
+.c small{display:block;color:var(--muted);font-size:.74rem}
+.c b{color:var(--gold);font-size:1.05rem;font-weight:500;font-variant-numeric:tabular-nums}
+.big{border:1px solid var(--gold2);border-radius:11px;padding:8px 10px;text-align:center;background:#120e04}
+.big small{color:var(--muted);font-size:.8rem}
+.big b{display:block;font-size:1.58rem;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.25}
+.big em{font-style:normal;color:var(--gold);font-size:.85rem}
+.err{color:#f2a0a0;text-align:center;min-height:1.25em;font-size:.81rem;margin:3px 0}
+.acts{display:flex;gap:6px;margin:5px 0 2px}
+.acts .btn{padding:8px 4px;font-size:.82rem;font-weight:500;background:#0b0b0b}
+.new{border:1px solid #b4363a;color:#f4a3a5}
+.sv{border:1px solid var(--gold2);color:var(--gold)}
+.wrap{max-height:56vh;overflow:auto;border:1px solid #333;border-radius:11px;margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:.8rem;font-variant-numeric:tabular-nums}
+th,td{padding:6px 4px;text-align:center;border-bottom:1px solid #222;white-space:nowrap}
+th{position:sticky;top:0;background:#1c1608;color:var(--gold);font-weight:600}
+.note{text-align:center;font-size:.75rem;color:var(--muted);margin:5px 0}
+.foot{text-align:center;font-size:.76rem;color:var(--muted);margin:6px 0 0}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>حاسبة أقساط القروض</h1>
+
+<div id="main">
+  <div class="tabs">
+    <button class="tab on" id="tm" type="button">فائدة متناقصة</button>
+    <button class="tab" id="tf" type="button">فائدة ثابتة</button>
+    <button class="tab" id="ts" type="button">ضمان مرتب/معاش</button>
+  </div>
+  <select id="type" aria-label="نوع القرض">
+    <option value="قرض شخصي" selected>قرض شخصي</option>
+    <option value="قرض سيارة">قرض سيارة</option>
+    <option value="قرض عقاري">قرض عقاري</option>
+  </select>
+  <input id="amt" type="text" inputmode="decimal" autocomplete="off" placeholder="مبلغ القرض" aria-label="مبلغ القرض">
+  <div id="sbox" style="display:none">
+    <div class="row2">
+      <input id="inc" type="text" inputmode="decimal" autocomplete="off" placeholder="صافي الدخل الشهري" aria-label="صافي الدخل">
+      <input id="obl" type="text" inputmode="decimal" autocomplete="off" placeholder="الالتزامات القائمة" aria-label="الالتزامات">
+    </div>
+    <div class="row2">
+      <input id="dbr" type="text" inputmode="decimal" autocomplete="off" placeholder="نسبة الاستقطاع %" aria-label="نسبة الاستقطاع">
+      <select id="sm" aria-label="طريقة الفائدة"><option value="d" selected>فائدة متناقصة</option><option value="f">فائدة ثابتة</option></select>
+    </div>
+  </div>
+  <div class="row2">
+    <input id="rate" type="text" inputmode="decimal" autocomplete="off" placeholder="سعر الفائدة % سنوياً" aria-label="سعر الفائدة">
+    <select id="months" required aria-label="المدة"><option value="" selected disabled>المدة (بالشهور)</option></select>
+  </div>
+  <div class="row2">
+    <input id="fee" type="text" inputmode="decimal" autocomplete="off" placeholder="مصاريف إدارية % (للمعرفة)" aria-label="المصاريف الإدارية">
+    <input id="ins" type="text" inputmode="decimal" autocomplete="off" placeholder="التأمين % (للمعرفة)" aria-label="التأمين">
+  </div>
+  <button class="btn go" id="go" type="button">حساب القرض</button>
+
+  <div class="grid">
+    <div class="c"><small>إجمالي الفوائد</small><b id="r1">—</b></div>
+    <div class="c"><small>إجمالي المسدد</small><b id="r2">—</b></div>
+    <div class="c"><small>مصاريف وتأمين (للمعرفة)</small><b id="r3">—</b></div>
+    <div class="c"><small>عدد الأقساط</small><b id="r4">—</b></div>
+  </div>
+  <div class="big"><small id="r0">القسط الشهري</small><b id="r5">—</b><em id="r6">المعدل السنوي الفعلي: —</em></div>
+  <div class="err" id="err"></div>
+  <div class="acts">
+    <button class="btn new" id="nw" type="button">إدخال جديد</button>
+    <button class="btn sv" id="sc" type="button">جدول السداد</button>
+    <button class="btn sv" id="ep" type="button">سداد مبكر</button>
+  </div>
+</div>
+
+<div id="earlyPg" style="display:none">
+  <h2>السداد المبكر</h2>
+  <div class="tabs">
+    <button class="tab on" id="etFull" type="button">سداد مبكر كلي</button>
+    <button class="tab" id="etPart" type="button">سداد مبكر جزئي</button>
+  </div>
+
+  <div class="row2">
+    <select id="payMonth" aria-label="شهر السداد المبكر"></select>
+    <input id="preFee" type="text" inputmode="decimal" autocomplete="off" placeholder="عمولة السداد % (اختياري)" aria-label="نسبة عمولة السداد المبكر">
+  </div>
+
+  <div id="partBox" style="display:none">
+    <div class="row2">
+      <input id="partAmt" type="text" inputmode="decimal" autocomplete="off" placeholder="المبلغ الإضافي المسدد" aria-label="المبلغ الإضافي">
+      <select id="partOpt" aria-label="طريقة التعديل">
+        <option value="term" selected>تقليل عدد الأقساط</option>
+        <option value="inst">تقليل قيمة القسط</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="btn go" id="calcEarly" type="button">حساب السداد المبكر</button>
+  <div class="err" id="earlyErr"></div>
+
+  <div class="grid">
+    <div class="c"><small id="ec1L">الرصيد المتبقي قبل السداد</small><b id="ec1">—</b></div>
+    <div class="c"><small id="ec2L">عمولة السداد المبكر</small><b id="ec2">—</b></div>
+    <div class="c"><small id="ec3L">الوفورات في الفوائد</small><b id="ec3">—</b></div>
+    <div class="c"><small id="ec4L">الأقساط المتبقية</small><b id="ec4">—</b></div>
+  </div>
+  <div class="big">
+    <small id="ebL">إجمالي المطلوب للسداد المبكر</small>
+    <b id="ebV">—</b>
+    <em id="ebSub">—</em>
+  </div>
+  <div class="note" id="eNote"></div>
+  <div class="acts">
+    <button class="btn sv" id="bkEarly" type="button">رجوع للحاسبة</button>
+    <button class="btn sv" id="scPart" type="button" style="display:none">جدول السداد المعدل</button>
+  </div>
+</div>
+
+<div id="pg" style="display:none">
+  <h2 id="pgTitle">جدول السداد</h2>
+  <div class="wrap"><table><thead><tr><th>القسط</th><th>المبلغ</th><th>الفائدة</th><th>الأصل</th><th>الرصيد</th></tr></thead><tbody id="tb"></tbody></table></div>
+  <button class="btn go" id="bk" type="button">رجوع</button>
+</div>
+
+<p class="foot">أ/ طارق متولي</p>
+</div>
+
+<script>
+var mode = "d", earlyMode = "full", lastData = null, sched = null, partSched = null, prevScreen = "main";
+function $(i){return document.getElementById(i);}
+function cleanNumStr(s){
+  return String(s || "").replace(/[٠-٩]/g, function(d){ return d.charCodeAt(0) - 1632; }).replace(/,/g, "").trim();
+}
+function num(i){
+  var v = cleanNumStr($(i).value);
+  return v === "" ? NaN : Number(v);
+}
+function fmt(n){return Number(n || 0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function pmt(P, i, n){return i === 0 ? P / n : P * i / (1 - Math.pow(1 + i, -n));}
+
+function showScreen(id){
+  ["main","earlyPg","pg"].forEach(function(s){ $(s).style.display = (s === id ? "block" : "none"); });
+  window.scrollTo(0, 0);
+}
+
+function clearRes(){
+  sched = null; lastData = null; partSched = null;
+  ["r1","r2","r3","r4","r5"].forEach(function(i){ $(i).textContent = "—"; });
+  $("r0").textContent = "القسط الشهري";
+  $("r6").textContent = "المعدل السنوي الفعلي: —";
+  $("err").textContent = "";
+}
+function showErr(t){ clearRes(); $("err").textContent = t; }
+
+function clearEarlyCards(msg){
+  ["ec1","ec2","ec3","ec4","ebV"].forEach(function(id){ $(id).textContent = "—"; });
+  $("ebSub").textContent = "—";
+  $("eNote").textContent = "";
+  $("earlyErr").textContent = msg || "";
+}
+
+function setMode(m){
+  mode = m;
+  $("tm").classList.toggle("on", m === "d");
+  $("tf").classList.toggle("on", m === "f");
+  $("ts").classList.toggle("on", m === "s");
+  $("amt").style.display = m === "s" ? "none" : "block";
+  $("sbox").style.display = m === "s" ? "block" : "none";
+  clearRes();
+}
+
+function setEarlyMode(em){
+  earlyMode = em;
+  $("etFull").classList.toggle("on", em === "full");
+  $("etPart").classList.toggle("on", em === "part");
+  $("partBox").style.display = em === "part" ? "block" : "none";
+  $("scPart").style.display = "none";
+  partSched = null;
+  calcEarlyAction(true);
+}
+
+function calc(){
+  var r = num("rate") / 100, n = parseInt($("months").value, 10);
+  var feePct = cleanNumStr($("fee").value) === "" ? 0 : num("fee") / 100;
+  var insPct = cleanNumStr($("ins").value) === "" ? 0 : num("ins") / 100;
+  var meth = mode === "s" ? $("sm").value : mode;
+  if (!(r >= 0) || !(n > 0) || !(feePct >= 0) || !(insPct >= 0)) { showErr("أكمل البيانات المطلوبة بأرقام صحيحة."); return false; }
+
+  var P, a = meth === "d" ? pmt(1, r / 12, n) : (1 + r * n / 12) / n;
+  if (mode === "s") {
+    var inc = num("inc"), obl = cleanNumStr($("obl").value) === "" ? 0 : num("obl"), dbr = num("dbr") / 100;
+    if (!(inc > 0) || !(obl >= 0) || !(dbr > 0) || dbr > 1) { showErr("أكمل الدخل والالتزامات ونسبة الاستقطاع الصحيحة."); return false; }
+    var maxInst = inc * dbr - obl;
+    if (!(maxInst > 0)) { showErr("القسط المسموح لا يغطي الالتزامات."); return false; }
+    P = maxInst / a;
+  } else {
+    P = num("amt");
+    if (!(P > 0)) { showErr("أكمل البيانات المطلوبة بأرقام صحيحة."); return false; }
+  }
+
+  var inst = P * a;
+  var interest = inst * n - P;
+  var extraInfo = P * (feePct + insPct);
+  var total = P + interest;
+
+  var lo = 0, hi = 1, i, k, eff = 0;
+  if (P > 0 && inst * n > P) {
+    for (k = 0; k < 100; k++) {
+      i = (lo + hi) / 2;
+      if (pmt(P, i, n) < inst) lo = i; else hi = i;
+    }
+    eff = (lo + hi) / 2 * 12 * 100;
+  }
+
+  sched = []; var bal = P, mi, mp;
+  for (k = 1; k <= n; k++) {
+    if (meth === "d") { mi = bal * r / 12; mp = inst - mi; }
+    else { mi = interest / n; mp = P / n; }
+    bal = k === n ? 0 : Math.max(bal - mp, 0);
+    sched.push([k, inst, mi, mp, bal]);
+  }
+
+  lastData = { P: P, r: r, n: n, meth: meth, inst: inst, interest: interest, sched: sched };
+
+  $("err").textContent = "";
+  $("r1").textContent = fmt(interest);
+  $("r2").textContent = fmt(total);
+  $("r3").textContent = fmt(extraInfo);
+  $("r4").textContent = n;
+  var effTxt = (meth === "d" ? "المعدل السنوي الفعلي: " : "المعدل المكافئ بالمتناقصة: ") + fmt(eff) + "%";
+  if (mode === "s") {
+    $("r0").textContent = $("type").value + " | أقصى مبلغ قرض";
+    $("r5").textContent = fmt(P);
+    $("r6").textContent = "القسط الشهري: " + fmt(inst) + "\n" + effTxt;
+  } else {
+    $("r0").textContent = $("type").value + " | القسط الشهري";
+    $("r5").textContent = fmt(inst);
+    $("r6").textContent = effTxt;
+  }
+  return true;
+}
+
+function calcEarlyAction(silentEmpty){
+  if (!lastData) return;
+  $("earlyErr").textContent = "";
+  $("scPart").style.display = "none";
+  partSched = null;
+
+  var k = parseInt($("payMonth").value, 10) || 1;
+  var feePct = cleanNumStr($("preFee").value) === "" ? 0 : num("preFee") / 100;
+  if (!(feePct >= 0)) { clearEarlyCards("نسبة العمولة يجب أن تكون رقماً صحيحاً."); return; }
+
+  var r = lastData.r, n = lastData.n, meth = lastData.meth, origInst = lastData.inst, origInt = lastData.interest;
+  var rowK = lastData.sched[k - 1];
+  var remBal = rowK[4];
+  var paidInt = 0;
+  for (var idx = 0; idx < k; idx++) paidInt += lastData.sched[idx][2];
+
+  if (earlyMode === "full") {
+    var feeVal = remBal * feePct;
+    var totalClose = remBal + feeVal;
+    var savedInt = Math.max(0, origInt - paidInt);
+
+    $("ec1L").textContent = "أصل الرصيد المتبقي";
+    $("ec2L").textContent = "عمولة السداد المبكر";
+    $("ec3L").textContent = "الوفورات في الفوائد";
+    $("ec4L").textContent = "الأقساط الملغاة";
+    $("ebL").textContent = "إجمالي المطلوب لقفل القرض";
+
+    $("ec1").textContent = fmt(remBal);
+    $("ec2").textContent = fmt(feeVal);
+    $("ec3").textContent = fmt(savedInt);
+    $("ec4").textContent = (n - k) + " شهر";
+    $("ebV").textContent = fmt(totalClose);
+    $("ebSub").textContent = "بعد سداد " + k + " قسط من " + n + " | العمولة: " + fmt(feePct * 100) + "%";
+    $("eNote").textContent = "ملاحظة: السداد الكلي يُنهي القرض بالكامل في الشهر رقم " + k + ".";
+    return;
+  }
+
+  if (k >= n) { clearEarlyCards("لا يمكن عمل سداد جزئي في الشهر الأخير من القرض."); return; }
+  var rawPart = cleanNumStr($("partAmt").value);
+  if (rawPart === "") {
+    clearEarlyCards(silentEmpty === true ? "" : "أدخل المبلغ الإضافي المسدد أولاً.");
+    return;
+  }
+  var extraPay = Number(rawPart);
+  if (!(extraPay > 0)) { clearEarlyCards("أدخل مبلغاً إضافياً صحيحاً أكبر من الصفر."); return; }
+  if (extraPay >= remBal) { clearEarlyCards("المبلغ الإضافي يساوي أو يتجاوز الرصيد المتبقي؛ استخدم السداد الكلي."); return; }
+
+  var opt = $("partOpt").value;
+  var partFee = extraPay * feePct;
+  var newPrincipal = remBal - extraPay;
+  var remMonths = n - k;
+  var monthlyRate = r / 12;
+
+  var newRows = [];
+  for (var j = 0; j < k; j++) newRows.push(lastData.sched[j].slice());
+
+  var newTotalInt = paidInt;
+  var finalInst = origInst;
+  var finalMonths = remMonths;
+  var lastInstNote = "";
+
+  if (meth === "d") {
+    if (opt === "term") {
+      if (monthlyRate > 0 && origInst <= newPrincipal * monthlyRate) {
+        clearEarlyCards("القسط الحالي أقل من الفائدة الشهرية؛ اختر تقليل قيمة القسط أو زد المبلغ.");
+        return;
+      }
+      var bal = newPrincipal, mCount = 0;
+      while (bal > 0.005 && mCount < 600) {
+        mCount++;
+        var mi = bal * monthlyRate;
+        var pmtNow = origInst;
+        var mp = pmtNow - mi;
+        if (mp >= bal) { mp = bal; pmtNow = mp + mi; }
+        bal = Math.max(0, bal - mp);
+        newTotalInt += mi;
+        newRows.push([k + mCount, pmtNow, mi, mp, bal]);
+      }
+      finalMonths = mCount;
+      finalInst = origInst;
+    } else {
+      finalMonths = remMonths;
+      finalInst = pmt(newPrincipal, monthlyRate, remMonths);
+      var bal2 = newPrincipal;
+      for (var m2 = 1; m2 <= remMonths; m2++) {
+        var mi2 = bal2 * monthlyRate;
+        var mp2 = m2 === remMonths ? bal2 : (finalInst - mi2);
+        var pmtNow2 = m2 === remMonths ? (mp2 + mi2) : finalInst;
+        bal2 = Math.max(0, bal2 - mp2);
+        newTotalInt += mi2;
+        newRows.push([k + m2, pmtNow2, mi2, mp2, bal2]);
+      }
+    }
+  } else {
+    if (opt === "term") {
+      var monthlyFlatInt = newPrincipal * (r / 12);
+      var monthlyPrin = origInst - monthlyFlatInt;
+      if (monthlyPrin <= 0) {
+        clearEarlyCards("القسط الحالي لا يغطي الفائدة الشهرية؛ اختر تقليل قيمة القسط أو زد المبلغ.");
+        return;
+      }
+      finalMonths = Math.max(1, Math.ceil(newPrincipal / monthlyPrin));
+      var actualInt = newPrincipal * r * (finalMonths / 12);
+      var miF = actualInt / finalMonths;
+      var balF = newPrincipal;
+      for (var mf = 1; mf <= finalMonths; mf++) {
+        var mpF = mf === finalMonths ? balF : Math.min(balF, origInst - miF);
+        var pmtF = mpF + miF;
+        balF = Math.max(0, balF - mpF);
+        newTotalInt += miF;
+        newRows.push([k + mf, pmtF, miF, mpF, balF]);
+      }
+      finalInst = origInst;
+      lastInstNote = " (الأخير: " + fmt(newRows[newRows.length - 1][1]) + ")";
+    } else {
+      finalMonths = remMonths;
+      var remIntF = newPrincipal * r * (remMonths / 12);
+      finalInst = (newPrincipal + remIntF) / remMonths;
+      var balF2 = newPrincipal;
+      for (var mf2 = 1; mf2 <= remMonths; mf2++) {
+        var miF2 = remIntF / remMonths;
+        var mpF2 = mf2 === remMonths ? balF2 : (newPrincipal / remMonths);
+        balF2 = Math.max(0, balF2 - mpF2);
+        newTotalInt += miF2;
+        newRows.push([k + mf2, finalInst, miF2, mpF2, balF2]);
+      }
+    }
+  }
+
+  var savedIntPart = Math.max(0, origInt - newTotalInt);
+  partSched = newRows;
+
+  $("ec1L").textContent = "الرصيد بعد السداد الجزئي";
+  $("ec2L").textContent = "عمولة السداد الجزئي";
+  $("ec3L").textContent = "الوفورات في الفوائد";
+  $("ec4L").textContent = opt === "term" ? "الأقساط الجديدة المتبقية" : "الأقساط المتبقية (ثابتة)";
+  $("ebL").textContent = opt === "term" ? "مدة السداد الجديدة" : "القسط الشهري الجديد";
+
+  $("ec1").textContent = fmt(newPrincipal);
+  $("ec2").textContent = fmt(partFee);
+  $("ec3").textContent = fmt(savedIntPart);
+  $("ec4").textContent = finalMonths + " شهر (بدل " + remMonths + ")";
+
+  if (opt === "term") {
+    $("ebV").textContent = finalMonths + " قسط متبقي";
+    $("ebSub").textContent = "القسط الثابت: " + fmt(finalInst) + lastInstNote + " | وفرت " + Math.max(0, remMonths - finalMonths) + " شهر";
+  } else {
+    $("ebV").textContent = fmt(finalInst);
+    $("ebSub").textContent = "بدلاً من " + fmt(origInst) + " شهرياً | المدة المتبقية: " + finalMonths + " شهر";
+  }
+  $("eNote").textContent = "إجمالي المدفوع الآن (المبلغ + العمولة): " + fmt(extraPay + partFee) + " — اضغط «جدول السداد المعدل» لعرض الأقساط.";
+  $("scPart").style.display = "block";
+}
+
+function renderTable(rows, title, backTarget){
+  var tb = $("tb"); tb.textContent = "";
+  rows.forEach(function(row){
+    var tr = document.createElement("tr");
+    row.forEach(function(v, j){
+      var td = document.createElement("td");
+      td.textContent = j === 0 ? v : fmt(v);
+      tr.appendChild(td);
+    });
+    tb.appendChild(tr);
+  });
+  $("pgTitle").textContent = title;
+  prevScreen = backTarget;
+  showScreen("pg");
+}
+
+function showSched(){
+  if (!sched && !calc()) return;
+  renderTable(sched, "جدول السداد", "main");
+}
+
+function openEarly(){
+  if (!lastData && !calc()) return;
+  var sel = $("payMonth");
+  sel.innerHTML = "";
+  for (var m = 1; m <= lastData.n; m++) {
+    sel.add(new Option("السداد بعد القسط رقم " + m, m));
+  }
+  if (lastData.n >= 12) sel.value = 12;
+  setEarlyMode("full");
+  showScreen("earlyPg");
+}
+
+function resetAll(){
+  ["amt","rate","fee","ins","inc","obl","dbr","preFee","partAmt"].forEach(function(i){ $(i).value = ""; });
+  $("months").value = "";
+  clearRes();
+}
+
+(function(){
+  var s = $("months"), m, t;
+  for (m = 1; m <= 360; m++) {
+    t = m + " شهر" + (m % 12 === 0 ? " (" + m / 12 + (m / 12 <= 10 ? " سنوات" : " سنة") + ")" : "");
+    s.add(new Option(t, m));
+  }
+})();
+
+["amt","inc","obl","partAmt"].forEach(function(id){
+  $(id).addEventListener("input", function(){
+    var v = this.value.replace(/[٠-٩]/g, function(d){ return d.charCodeAt(0) - 1632; }).replace(/[^\d.]/g, "");
+    var p = v.split(".");
+    p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    this.value = p.length > 1 ? p[0] + "." + p[1].slice(0, 2) : p[0];
+  });
+});
+
+["rate","fee","ins","dbr","preFee"].forEach(function(id){
+  $(id).addEventListener("input", function(){
+    var v = this.value.replace(/[٠-٩]/g, function(d){ return d.charCodeAt(0) - 1632; }).replace(/[^\d.]/g, "");
+    var p = v.split(".");
+    this.value = p.length > 1 ? p[0] + "." + p[1].slice(0, 4) : p[0];
+  });
+});
+
+["amt","inc","obl","dbr","rate","fee","ins"].forEach(function(id){
+  $(id).addEventListener("keydown", function(e){ if (e.key === "Enter") calc(); });
+});
+
+["preFee","partAmt"].forEach(function(id){
+  $(id).addEventListener("keydown", function(e){ if (e.key === "Enter") calcEarlyAction(); });
+});
+
+$("tm").addEventListener("click", function(){ setMode("d"); });
+$("tf").addEventListener("click", function(){ setMode("f"); });
+$("ts").addEventListener("click", function(){ setMode("s"); });
+$("go").addEventListener("click", calc);
+$("nw").addEventListener("click", resetAll);
+$("sc").addEventListener("click", showSched);
+$("ep").addEventListener("click", openEarly);
+
+$("etFull").addEventListener("click", function(){ setEarlyMode("full"); });
+$("etPart").addEventListener("click", function(){ setEarlyMode("part"); });
+$("calcEarly").addEventListener("click", function(){ calcEarlyAction(false); });
+$("payMonth").addEventListener("change", function(){ calcEarlyAction(true); });
+$("partOpt").addEventListener("change", function(){ calcEarlyAction(true); });
+$("bkEarly").addEventListener("click", function(){ showScreen("main"); });
+$("scPart").addEventListener("click", function(){
+  if (partSched) renderTable(partSched, "جدول السداد بعد السداد الجزئي", "earlyPg");
+});
+$("bk").addEventListener("click", function(){ showScreen(prevScreen); });
+</script>
+</body>
+</html>
+
