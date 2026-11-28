@@ -8,32 +8,36 @@
 :root{--gold:#e6c673;--gold2:#a98b4a;--line:#5a4a26;--text:#f3efe6;--muted:#c4bba7;color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;padding:env(safe-area-inset-top,0px) 6px env(safe-area-inset-bottom,0px);background:#000;color:var(--text);font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.38}
-.app{max-width:480px;margin:6px auto;padding:11px 12px;border:1.5px solid var(--gold2);border-radius:20px;background:linear-gradient(160deg,#1a1a1a,#050505)}
-h1{color:var(--gold);text-align:center;font-size:1.22rem;margin:0 0 8px;padding-bottom:7px;border-bottom:1px solid var(--gold2)}
-h2{color:var(--gold);text-align:center;font-size:1.08rem;margin:0 0 8px}
-.tabs{display:flex;gap:6px;margin-bottom:7px}
-.tab{flex:1;padding:7px 5px;border-radius:10px;border:1px solid var(--line);background:#111;color:var(--muted);font:inherit;font-size:.83rem;cursor:pointer}
+body{margin:0;padding:env(safe-area-inset-top,0px) 6px env(safe-area-inset-bottom,0px);background:#000;color:var(--text);font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.36}
+.app{max-width:480px;margin:6px auto;padding:10px 12px;border:1.5px solid var(--gold2);border-radius:20px;background:linear-gradient(160deg,#1a1a1a,#050505)}
+h1{color:var(--gold);text-align:center;font-size:1.2rem;margin:0 0 7px;padding-bottom:6px;border-bottom:1px solid var(--gold2)}
+h2{color:var(--gold);text-align:center;font-size:1.06rem;margin:0 0 7px}
+.tabs{display:flex;gap:6px;margin-bottom:6px}
+.tab{flex:1;padding:6px 4px;border-radius:10px;border:1px solid var(--line);background:#111;color:var(--muted);font:inherit;font-size:.82rem;cursor:pointer}
 .tab.on{border-color:var(--gold);color:var(--gold);background:linear-gradient(#2a2410,#0d0d0d)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .row2 input,.row2 select{min-width:0}
 .big em{white-space:pre-line}
-input,select{width:100%;padding:8px 10px;margin-bottom:6px;border-radius:11px;border:1px solid #3a3a3a;background:#0b0b0b;color:var(--text);font:inherit;font-size:.92rem}
-input::placeholder{color:#8a826f;font-size:.82rem}
-select:invalid{color:#8a826f;font-size:.82rem}
-.btn{width:100%;padding:9px;border-radius:11px;font:inherit;font-weight:700;cursor:pointer}
-.go{border:1px solid var(--gold);background:linear-gradient(#e9cb7a,#a97f2d);color:#1a1405;font-size:.95rem;margin:2px 0 7px}
+input,select{width:100%;padding:7px 10px;margin-bottom:5px;border-radius:11px;border:1px solid #3a3a3a;background:#0b0b0b;color:var(--text);font:inherit;font-size:.9rem}
+input::placeholder{color:#8a826f;font-size:.8rem}
+select:invalid{color:#8a826f;font-size:.8rem}
+.btn{width:100%;padding:8px;border-radius:11px;font:inherit;font-weight:700;cursor:pointer}
+.go{border:1px solid var(--gold);background:linear-gradient(#e9cb7a,#a97f2d);color:#1a1405;font-size:.94rem;margin:2px 0 6px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
-.c{border:1px solid #333;border-radius:11px;padding:7px 6px;text-align:center;background:#0b0b0b}
-.c small{display:block;color:var(--muted);font-size:.74rem}
-.c b{color:var(--gold);font-size:1.05rem;font-weight:500;font-variant-numeric:tabular-nums}
-.big{border:1px solid var(--gold2);border-radius:11px;padding:8px 10px;text-align:center;background:#120e04}
-.big small{color:var(--muted);font-size:.8rem}
-.big b{display:block;font-size:1.58rem;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.25}
-.big em{font-style:normal;color:var(--gold);font-size:.85rem}
-.err{color:#f2a0a0;text-align:center;min-height:1.25em;font-size:.81rem;margin:3px 0}
-.acts{display:flex;gap:6px;margin:5px 0 2px}
-.acts .btn{padding:8px 4px;font-size:.82rem;font-weight:500;background:#0b0b0b}
+.c{border:1px solid #333;border-radius:11px;padding:6px;text-align:center;background:#0b0b0b}
+.c small{display:block;color:var(--muted);font-size:.73rem}
+.c b{color:var(--gold);font-size:1.02rem;font-weight:500;font-variant-numeric:tabular-nums}
+.big{border:1px solid var(--gold2);border-radius:11px;padding:7px 9px;text-align:center;background:#120e04}
+.big small{color:var(--muted);font-size:.78rem}
+.big b{display:block;font-size:1.52rem;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.22}
+.big em{font-style:normal;color:var(--gold);font-size:.82rem}
+.dbrBox{margin-top:6px;border-radius:11px;padding:7px 9px;text-align:center;font-size:.8rem;line-height:1.38}
+.dbrBox.ok{border:1px solid #3a7d4e;background:#09180e;color:#9be7b0}
+.dbrBox.bad{border:1px solid #9e2f48;background:#240812;color:#ff9ab0}
+.dbrBox strong{display:block;font-size:.88rem;margin-bottom:2px}
+.err{color:#f2a0a0;text-align:center;min-height:1.2em;font-size:.8rem;margin:2px 0}
+.acts{display:flex;gap:6px;margin:4px 0 1px}
+.acts .btn{padding:7px 4px;font-size:.81rem;font-weight:500;background:#0b0b0b}
 .new{border:1px solid #b4363a;color:#f4a3a5}
 .sv{border:1px solid var(--gold2);color:var(--gold)}
 .wrap{max-height:56vh;overflow:auto;border:1px solid #333;border-radius:11px;margin-bottom:8px}
@@ -41,7 +45,7 @@ table{width:100%;border-collapse:collapse;font-size:.8rem;font-variant-numeric:t
 th,td{padding:6px 4px;text-align:center;border-bottom:1px solid #222;white-space:nowrap}
 th{position:sticky;top:0;background:#1c1608;color:var(--gold);font-weight:600}
 .note{text-align:center;font-size:.75rem;color:var(--muted);margin:5px 0}
-.foot{text-align:center;font-size:.76rem;color:var(--muted);margin:6px 0 0}
+.foot{text-align:center;font-size:.75rem;color:var(--muted);margin:5px 0 0}
 </style>
 </head>
 <body>
@@ -54,39 +58,67 @@ th{position:sticky;top:0;background:#1c1608;color:var(--gold);font-weight:600}
     <button class="tab" id="tf" type="button">فائدة ثابتة</button>
     <button class="tab" id="ts" type="button">ضمان مرتب/معاش</button>
   </div>
+
   <select id="type" aria-label="نوع القرض">
     <option value="قرض شخصي" selected>قرض شخصي</option>
     <option value="قرض سيارة">قرض سيارة</option>
     <option value="قرض عقاري">قرض عقاري</option>
   </select>
+
   <input id="amt" type="text" inputmode="decimal" autocomplete="off" placeholder="مبلغ القرض" aria-label="مبلغ القرض">
+
   <div id="sbox" style="display:none">
     <div class="row2">
-      <input id="inc" type="text" inputmode="decimal" autocomplete="off" placeholder="صافي الدخل الشهري" aria-label="صافي الدخل">
-      <input id="obl" type="text" inputmode="decimal" autocomplete="off" placeholder="الالتزامات القائمة" aria-label="الالتزامات">
+      <input id="inc" type="text" inputmode="decimal" autocomplete="off" placeholder="الدخل الشهري" aria-label="الدخل الشهري">
+      <input id="obl" type="text" inputmode="decimal" autocomplete="off" placeholder="الالتزامات الشهرية" aria-label="الالتزامات الشهرية">
     </div>
     <div class="row2">
-      <input id="dbr" type="text" inputmode="decimal" autocomplete="off" placeholder="نسبة الاستقطاع %" aria-label="نسبة الاستقطاع">
-      <select id="sm" aria-label="طريقة الفائدة"><option value="d" selected>فائدة متناقصة</option><option value="f">فائدة ثابتة</option></select>
+      <input id="dbr" type="text" inputmode="decimal" autocomplete="off" placeholder="نسبة DBR للبنك %" aria-label="نسبة DBR للبنك">
+      <select id="sm" aria-label="طريقة الفائدة">
+        <option value="d" selected>فائدة متناقصة</option>
+        <option value="f">فائدة ثابتة</option>
+      </select>
     </div>
   </div>
+
   <div class="row2">
     <input id="rate" type="text" inputmode="decimal" autocomplete="off" placeholder="سعر الفائدة % سنوياً" aria-label="سعر الفائدة">
     <select id="months" required aria-label="المدة"><option value="" selected disabled>المدة (بالشهور)</option></select>
   </div>
+
   <div class="row2">
-    <input id="fee" type="text" inputmode="decimal" autocomplete="off" placeholder="مصاريف إدارية % (للمعرفة)" aria-label="المصاريف الإدارية">
-    <input id="ins" type="text" inputmode="decimal" autocomplete="off" placeholder="التأمين % (للمعرفة)" aria-label="التأمين">
+    <input id="fee" type="text" inputmode="decimal" autocomplete="off" placeholder="المصاريف الإدارية (اختياري)" aria-label="المصاريف الإدارية">
+    <select id="feeMode" aria-label="نوع حساب المصاريف الإدارية">
+      <option value="pct" selected>% من القرض</option>
+      <option value="fix">مبلغ ثابت</option>
+    </select>
   </div>
+
+  <div class="row2">
+    <input id="ins" type="text" inputmode="decimal" autocomplete="off" placeholder="التأمين (اختياري)" aria-label="التأمين">
+    <select id="insMode" aria-label="نوع حساب التأمين">
+      <option value="pct" selected>% من القرض</option>
+      <option value="fix">مبلغ ثابت</option>
+    </select>
+  </div>
+
   <button class="btn go" id="go" type="button">حساب القرض</button>
 
   <div class="grid">
     <div class="c"><small>إجمالي الفوائد</small><b id="r1">—</b></div>
-    <div class="c"><small>إجمالي المسدد</small><b id="r2">—</b></div>
-    <div class="c"><small>مصاريف وتأمين (للمعرفة)</small><b id="r3">—</b></div>
-    <div class="c"><small>عدد الأقساط</small><b id="r4">—</b></div>
+    <div class="c"><small>إجمالي الأقساط</small><b id="r2">—</b></div>
+    <div class="c"><small>المصاريف الإدارية</small><b id="r3">—</b></div>
+    <div class="c"><small>التأمين</small><b id="r4">—</b></div>
   </div>
-  <div class="big"><small id="r0">القسط الشهري</small><b id="r5">—</b><em id="r6">المعدل السنوي الفعلي: —</em></div>
+
+  <div class="big">
+    <small id="r0">القسط الشهري</small>
+    <b id="r5">—</b>
+    <em id="r6">عدد الأقساط: —</em>
+  </div>
+
+  <div id="dbrCard" class="dbrBox" style="display:none"></div>
+
   <div class="err" id="err"></div>
   <div class="acts">
     <button class="btn new" id="nw" type="button">إدخال جديد</button>
@@ -169,7 +201,9 @@ function clearRes(){
   sched = null; lastData = null; partSched = null;
   ["r1","r2","r3","r4","r5"].forEach(function(i){ $(i).textContent = "—"; });
   $("r0").textContent = "القسط الشهري";
-  $("r6").textContent = "المعدل السنوي الفعلي: —";
+  $("r6").textContent = "عدد الأقساط: —";
+  $("dbrCard").style.display = "none";
+  $("dbrCard").textContent = "";
   $("err").textContent = "";
 }
 function showErr(t){ clearRes(); $("err").textContent = t; }
@@ -186,7 +220,6 @@ function setMode(m){
   $("tm").classList.toggle("on", m === "d");
   $("tf").classList.toggle("on", m === "f");
   $("ts").classList.toggle("on", m === "s");
-  $("amt").style.display = m === "s" ? "none" : "block";
   $("sbox").style.display = m === "s" ? "block" : "none";
   clearRes();
 }
@@ -203,38 +236,42 @@ function setEarlyMode(em){
 
 function calc(){
   var r = num("rate") / 100, n = parseInt($("months").value, 10);
-  var feePct = cleanNumStr($("fee").value) === "" ? 0 : num("fee") / 100;
-  var insPct = cleanNumStr($("ins").value) === "" ? 0 : num("ins") / 100;
+  var feeRaw = cleanNumStr($("fee").value) === "" ? 0 : num("fee");
+  var insRaw = cleanNumStr($("ins").value) === "" ? 0 : num("ins");
+  var feeMode = $("feeMode").value, insMode = $("insMode").value;
   var meth = mode === "s" ? $("sm").value : mode;
-  if (!(r >= 0) || !(n > 0) || !(feePct >= 0) || !(insPct >= 0)) { showErr("أكمل البيانات المطلوبة بأرقام صحيحة."); return false; }
 
-  var P, a = meth === "d" ? pmt(1, r / 12, n) : (1 + r * n / 12) / n;
-  if (mode === "s") {
-    var inc = num("inc"), obl = cleanNumStr($("obl").value) === "" ? 0 : num("obl"), dbr = num("dbr") / 100;
-    if (!(inc > 0) || !(obl >= 0) || !(dbr > 0) || dbr > 1) { showErr("أكمل الدخل والالتزامات ونسبة الاستقطاع الصحيحة."); return false; }
-    var maxInst = inc * dbr - obl;
-    if (!(maxInst > 0)) { showErr("القسط المسموح لا يغطي الالتزامات."); return false; }
-    P = maxInst / a;
-  } else {
-    P = num("amt");
-    if (!(P > 0)) { showErr("أكمل البيانات المطلوبة بأرقام صحيحة."); return false; }
+  if (!(r >= 0) || !(n > 0) || !(feeRaw >= 0) || !(insRaw >= 0)) {
+    showErr("أكمل البيانات المطلوبة بأرقام صحيحة.");
+    return false;
   }
 
+  var P = num("amt");
+  if (!(P > 0)) {
+    showErr("أدخل مبلغ القرض بشكل صحيح.");
+    return false;
+  }
+
+  var inc = 0, obl = 0, dbrPct = 0;
+  if (mode === "s") {
+    inc = num("inc");
+    obl = cleanNumStr($("obl").value) === "" ? 0 : num("obl");
+    dbrPct = num("dbr");
+    if (!(inc > 0) || !(obl >= 0) || !(dbrPct > 0) || dbrPct > 100) {
+      showErr("أكمل الدخل والالتزامات ونسبة DBR الصحيحة.");
+      return false;
+    }
+  }
+
+  var a = meth === "d" ? pmt(1, r / 12, n) : (1 + r * n / 12) / n;
   var inst = P * a;
   var interest = inst * n - P;
-  var extraInfo = P * (feePct + insPct);
   var total = P + interest;
 
-  var lo = 0, hi = 1, i, k, eff = 0;
-  if (P > 0 && inst * n > P) {
-    for (k = 0; k < 100; k++) {
-      i = (lo + hi) / 2;
-      if (pmt(P, i, n) < inst) lo = i; else hi = i;
-    }
-    eff = (lo + hi) / 2 * 12 * 100;
-  }
+  var feeVal = feeMode === "pct" ? (P * (feeRaw / 100)) : feeRaw;
+  var insVal = insMode === "pct" ? (P * (insRaw / 100)) : insRaw;
 
-  sched = []; var bal = P, mi, mp;
+  sched = []; var bal = P, mi, mp, k;
   for (k = 1; k <= n; k++) {
     if (meth === "d") { mi = bal * r / 12; mp = inst - mi; }
     else { mi = interest / n; mp = P / n; }
@@ -247,18 +284,29 @@ function calc(){
   $("err").textContent = "";
   $("r1").textContent = fmt(interest);
   $("r2").textContent = fmt(total);
-  $("r3").textContent = fmt(extraInfo);
-  $("r4").textContent = n;
-  var effTxt = (meth === "d" ? "المعدل السنوي الفعلي: " : "المعدل المكافئ بالمتناقصة: ") + fmt(eff) + "%";
+  $("r3").textContent = fmt(feeVal);
+  $("r4").textContent = fmt(insVal);
+  $("r0").textContent = $("type").value + " | القسط الشهري";
+  $("r5").textContent = fmt(inst);
+  $("r6").textContent = "عدد الأقساط: " + n;
+
   if (mode === "s") {
-    $("r0").textContent = $("type").value + " | أقصى مبلغ قرض";
-    $("r5").textContent = fmt(P);
-    $("r6").textContent = "القسط الشهري: " + fmt(inst) + "\n" + effTxt;
+    var actualDbr = ((inst + obl) / inc) * 100;
+    var maxAllowedInst = (inc * (dbrPct / 100)) - obl;
+    var maxLoan = maxAllowedInst > 0 ? (maxAllowedInst / a) : 0;
+    var isOk = actualDbr <= dbrPct && maxAllowedInst >= 0;
+
+    $("dbrCard").style.display = "block";
+    $("dbrCard").className = "dbrBox " + (isOk ? "ok" : "bad");
+    $("dbrCard").innerHTML =
+      "<strong>" + (isOk ? "موافق ✓ ضمن حدود DBR" : "غير موافق ✕ تجاوز DBR") + "</strong>" +
+      "النسبة الفعلية: " + fmt(actualDbr) + "% | نسبة البنك: " + fmt(dbrPct) + "%<br>" +
+      "أقصى مبلغ قرض يكون موافق عليه: " + fmt(maxLoan);
   } else {
-    $("r0").textContent = $("type").value + " | القسط الشهري";
-    $("r5").textContent = fmt(inst);
-    $("r6").textContent = effTxt;
+    $("dbrCard").style.display = "none";
+    $("dbrCard").textContent = "";
   }
+
   return true;
 }
 
@@ -452,6 +500,8 @@ function openEarly(){
 function resetAll(){
   ["amt","rate","fee","ins","inc","obl","dbr","preFee","partAmt"].forEach(function(i){ $(i).value = ""; });
   $("months").value = "";
+  $("feeMode").value = "pct";
+  $("insMode").value = "pct";
   clearRes();
 }
 
@@ -463,7 +513,7 @@ function resetAll(){
   }
 })();
 
-["amt","inc","obl","partAmt"].forEach(function(id){
+["amt","inc","obl","partAmt","fee","ins"].forEach(function(id){
   $(id).addEventListener("input", function(){
     var v = this.value.replace(/[٠-٩]/g, function(d){ return d.charCodeAt(0) - 1632; }).replace(/[^\d.]/g, "");
     var p = v.split(".");
@@ -472,7 +522,7 @@ function resetAll(){
   });
 });
 
-["rate","fee","ins","dbr","preFee"].forEach(function(id){
+["rate","dbr","preFee"].forEach(function(id){
   $(id).addEventListener("input", function(){
     var v = this.value.replace(/[٠-٩]/g, function(d){ return d.charCodeAt(0) - 1632; }).replace(/[^\d.]/g, "");
     var p = v.split(".");
@@ -509,4 +559,3 @@ $("bk").addEventListener("click", function(){ showScreen(prevScreen); });
 </script>
 </body>
 </html>
-
